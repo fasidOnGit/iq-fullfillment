@@ -7,7 +7,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
   { path: 'auth/login', component: LoginComponent },
 
-  { path: 'pages/home', loadChildren :() => import('./pages/pages.module').then(m => m.PagesModule) }
+  { path: 'pages', loadChildren :() => import('./pages/pages.module').then(m => m.PagesModule) }
 ];
 
 @NgModule({
