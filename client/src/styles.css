@@ -37,7 +37,7 @@ body{
   margin-bottom: 1rem;
 }
 .form-button{
-  background: #69d2e7;
+  background: #343a40!important;
   border: 1px solid #ddd;
   color: #ffffff;
   padding: 10px;
@@ -45,7 +45,7 @@ body{
   text-transform: uppercase;
 }
 .form-button:hover{
-  background: #69c8e7;
+  background: #343a40!important;
 }
 .form-header{
   text-align: center;
@@ -58,6 +58,6 @@ body{
 .forgot-pass {
   font-size: 12px;
   float: right;
-  color: #69c8e7;
+  color: #343a40!important;
   margin-top: 5px
 }
