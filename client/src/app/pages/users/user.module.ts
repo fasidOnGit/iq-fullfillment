@@ -4,6 +4,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { AddUserComponent } from './add-user/add-user.component';
 import { ViewUserComponent } from './view-user/view-user.component';
 import { RouterModule, Routes } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 
 const routes: Routes = [
   {
@@ -20,7 +22,9 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    SharedModule
-  ]
+    SharedModule,
+    FormsModule,
+    NgbTypeaheadModule,
+  ],
 })
 export class UserModule { }
