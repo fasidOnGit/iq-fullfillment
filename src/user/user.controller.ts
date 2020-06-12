@@ -1,6 +1,9 @@
+import { JoiValidationPipe } from './../joi-validation.pipe';
 import { IUser, UserService } from './user.service';
-import { Controller, Get, Post, Body, Put, Delete, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Delete, Param, ValidationPipe, UsePipes } from '@nestjs/common';
 import { Observable, of } from 'rxjs';
+import { User } from './user';
+import { v4 as uuidv4 } from 'uuid';
 
 @Controller('user')
 export class UserController {
@@ -17,9 +20,12 @@ export class UserController {
     }
 
     @Post()
-    createUser(@Body() userObj: Omit<IUser, 'id'>): Observable<{userId: string}> {
-        console.log(userObj)
-        return of({userId: 'Someone'});
+    @UsePipes(new ValidationPipe({transform: true}))
+    createUser(@Body() userObj: Omit<User, 'id'>): Observable<{userId: string}> {
+        const user = {...userObj, id: uuidv4()};
+        console.log(user, userObj);
+        this.userService.users.push(user);
+        return of({userId: user.id});
     }
 
     @Put()
