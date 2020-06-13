@@ -1,8 +1,6 @@
 import { UserService } from './user.service';
 import {Controller, Get, Post, Body, Put, Delete, Param} from '@nestjs/common';
-import {Observable, of} from 'rxjs';
-import { UserEntity} from './user.entity';
-import {mergeMap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 import {UserDto} from './user.dto';
 import {CreateUserDto} from './create-user.dto';
 
