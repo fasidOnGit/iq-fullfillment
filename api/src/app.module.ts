@@ -4,7 +4,9 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TaskModule } from './task/task.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user/user';
+import {configService} from './config.service';
+import {Connection} from 'typeorm';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -16,12 +18,17 @@ import { User } from './user/user';
     //   port: 3306,
     //   username: 'sgroot',
     //   password: 'qUAiNIb7s5NHzk_w',
-    //   database: 'test',
-    //   entities: [User],
+    //   database: 'user-task-criud',
+    //   entities: [UserEntity],
     //   synchronize: true,
+    //   autoLoadEntities: true
     // }),
+    TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private connection: Connection) {}
+}
