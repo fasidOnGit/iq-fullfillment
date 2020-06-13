@@ -22,14 +22,7 @@ export class UserController {
 
     @Post()
     createUser(@Body() userDto: CreateUserDto): Observable<UserDto> {
-        const { username, password, email, name } = userDto;
-        const userEntity: UserEntity = this.userService.user.create({username, password, email, name});
-        console.log(userEntity)
-        return of(userEntity).pipe(
-          mergeMap(
-            user => this.userService.save(user)
-          )
-        )
+        return this.userService.create(userDto);
     }
 
     @Put(':id')

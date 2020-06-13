@@ -1,20 +1,31 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable, InternalServerErrorException} from '@nestjs/common';
 import {UserEntity} from './user.entity';
 import {InjectRepository} from '@nestjs/typeorm';
 import {FindOneOptions, Repository} from 'typeorm';
 import {from, iif, Observable, of, throwError} from 'rxjs';
-import {map, mergeMap} from 'rxjs/operators';
+import {catchError, map, mergeMap} from 'rxjs/operators';
 import {userNotFound} from './user-error-message.utils';
 import {UserDto} from './user.dto';
 import {toUserDto} from '../shared/to-user.util';
 import {LoginUserDto} from './login-user.dto';
-import bcrypt from 'bcrypt';
+import {compare} from 'bcrypt';
+import {CreateUserDto} from './create-user.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity) public readonly user: Repository<UserEntity>
   ) {}
+
+  create(userDto: CreateUserDto): Observable<UserDto> {
+    const { username, password, email, name } = userDto;
+    const userEntity: UserEntity = this.user.create({username, password, email, name});
+    return of(userEntity).pipe(
+      mergeMap(
+        user => this.save(user)
+      )
+    )
+  }
 
   save(user: UserEntity): Observable<UserDto> {
     console.log(user);
@@ -55,9 +66,12 @@ export class UserService {
   }
 
   findByLogin({username, password}: LoginUserDto): Observable<UserDto> {
-    return from(this.user.findOne({where: username})).pipe(
+    console.log(username);
+    return from(this.user.findOne({where: {username}})).pipe(
+      catchError(() => throwError(new InternalServerErrorException())),
       mergeMap(
         user => {
+          console.log(user);
           return iif(
             () => !user,
             throwError(new HttpException({
@@ -65,7 +79,7 @@ export class UserService {
               error: userNotFound(username, 'name')
             }, HttpStatus.UNAUTHORIZED)),
             from(
-              bcrypt.compare(password, user.password)
+              compare(password, user.password)
             ).pipe(
               mergeMap(
                 isEqual => iif(
