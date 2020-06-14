@@ -1,6 +1,8 @@
-import {BeforeInsert, Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import {BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
+import {TaskEntity} from '../task/task.entity';
+import {IsNotEmpty, IsOptional} from 'class-validator';
 
 @Entity({name:'users'})
 export class UserEntity {
@@ -43,4 +45,11 @@ export class UserEntity {
         this.id = uuidv4();
         this.password = await bcrypt.hash(this.password, 10);
     }
+
+    @IsOptional()
+    @IsNotEmpty({
+      groups: ['task']
+    })
+    @OneToMany(type => TaskEntity, task => task)
+    tasks: TaskEntity[]
 }

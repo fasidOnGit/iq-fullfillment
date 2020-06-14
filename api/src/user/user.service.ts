@@ -8,7 +8,7 @@ import {userNotFound} from './user-error-message.utils';
 import {UserDto} from './user.dto';
 import {toUserDto} from '../shared/to-user.util';
 import {LoginUserDto} from './login-user.dto';
-import {compare} from 'bcrypt';
+import {compare, hashSync} from 'bcrypt';
 import {CreateUserDto} from './create-user.dto';
 
 @Injectable()
@@ -101,7 +101,10 @@ export class UserService {
     return this.findOne({where: {username}});
   }
 
-  update(id: string, user: Partial<UserEntity>): Observable<void> {
+  update(id: string, user: CreateUserDto): Observable<void> {
+    if (user.password) {
+      user.password = hashSync(user.password, 10);
+    }
     return from(
       this.user.update(id, user)
     ).pipe(
@@ -111,7 +114,7 @@ export class UserService {
           throwError(
             new HttpException({
               status: HttpStatus.NOT_FOUND,
-              error: userNotFound(user.id),
+              error: userNotFound(id),
             }, HttpStatus.NOT_FOUND)
           ),
           of()

@@ -38,6 +38,7 @@ export class AuthService {
     return this.userService.findByLogin(loginUserDto).pipe(
       map(user => {
         const token = this._createToken(user);
+        console.log(token);
         const what =  {
           username: user.username, userId: user.id, ...token,
         };
