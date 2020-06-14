@@ -1,10 +1,11 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import {BadRequestException, HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {TaskEntity} from './task.entity';
 import {FindOneOptions, Repository} from 'typeorm';
 import {from, iif, Observable, of, throwError} from 'rxjs';
-import {mergeMap} from 'rxjs/operators';
-import {userNotFound} from '../user/user-error-message.utils';
+import {mergeMap, switchMap} from 'rxjs/operators';
+import {taskNotFound, userNotFound} from '../user/user-error-message.utils';
+import {isNotEmpty} from 'class-validator';
 
 @Injectable()
 export class TaskService {
@@ -39,8 +40,55 @@ export class TaskService {
 
     create(taskDto: Partial<TaskEntity>): Observable<TaskEntity> {
       const user: TaskEntity = this.task.create(taskDto);
-      return from(
-        this.task.save(user)
+      return this.findOne({where: {name: user.name}}).pipe(
+        mergeMap(res => {
+          return isNotEmpty(res)
+            ?  throwError(
+              new BadRequestException(`${taskDto.name} already exists`)
+            )
+            : from(
+              this.task.save(user)
+            )
+        })
       );
     }
+
+    update(id: string, task: Partial<TaskEntity>): Observable<void> {
+      return from(
+        this.task.update(id, task)
+      ).pipe(
+        mergeMap(
+          res =>
+            iif(
+              () => res.affected === 0,
+              throwError(
+                new HttpException({
+                  status: HttpStatus.NOT_FOUND,
+                  error: taskNotFound(task.name, 'name'),
+                }, HttpStatus.NOT_FOUND)
+              ),
+              of()
+            )
+        )
+      );
+    }
+
+  delete(id: string): Observable<void> {
+    return from(
+      this.task.delete(id)
+    ).pipe(
+      mergeMap(res =>
+        iif(
+          () => res.affected === 0,
+          throwError(
+            new HttpException({
+              status: HttpStatus.NOT_FOUND,
+              error: userNotFound(id),
+            }, HttpStatus.NOT_FOUND)
+          ),
+          of()
+        )
+      )
+    )
+  }
 }
