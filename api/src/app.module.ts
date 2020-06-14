@@ -28,6 +28,7 @@ import { AuthModule } from './auth/auth.module';
   ],
   controllers: [AppController],
   providers: [AppService],
+  exports: [UserModule]
 })
 export class AppModule {
   constructor(private connection: Connection) {}

@@ -3,7 +3,7 @@ import {UserEntity} from './user.entity';
 import {InjectRepository} from '@nestjs/typeorm';
 import {FindOneOptions, Repository} from 'typeorm';
 import {from, iif, Observable, of, throwError} from 'rxjs';
-import {catchError, map, mergeMap} from 'rxjs/operators';
+import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {userNotFound} from './user-error-message.utils';
 import {UserDto} from './user.dto';
 import {toUserDto} from '../shared/to-user.util';
@@ -28,7 +28,6 @@ export class UserService {
   }
 
   save(user: UserEntity): Observable<UserDto> {
-    console.log(user);
     return from(this.user.save(user))
       .pipe(
         map(user => toUserDto(user))
@@ -66,12 +65,10 @@ export class UserService {
   }
 
   findByLogin({username, password}: LoginUserDto): Observable<UserDto> {
-    console.log(username);
     return from(this.user.findOne({where: {username}})).pipe(
       catchError(() => throwError(new InternalServerErrorException())),
       mergeMap(
         user => {
-          console.log(user);
           return iif(
             () => !user,
             throwError(new HttpException({

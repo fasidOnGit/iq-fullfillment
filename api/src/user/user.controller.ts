@@ -1,10 +1,12 @@
 import { UserService } from './user.service';
-import {Controller, Get, Post, Body, Put, Delete, Param} from '@nestjs/common';
+import {Controller, Get, Post, Body, Put, Delete, Param, UseGuards} from '@nestjs/common';
 import {Observable} from 'rxjs';
 import {UserDto} from './user.dto';
 import {CreateUserDto} from './create-user.dto';
+import {AuthGuard} from '@nestjs/passport';
 
 @Controller('user')
+@UseGuards(AuthGuard())
 export class UserController {
     constructor(private readonly userService: UserService) {}
     
