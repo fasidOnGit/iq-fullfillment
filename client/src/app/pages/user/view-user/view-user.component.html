@@ -1,0 +1,45 @@
+<div class="container-fluid">
+  <div class="content-section">
+    <div class="row">
+      <div class="col-6">
+        <h5>{{ title }}</h5>
+      </div>
+      <div class="col-6">
+        <button type="button" class="btn btn-outline-dark float-right" (click)="onRoute(false)">
+          <i class="fa fa-plus-square"></i> Add User
+        </button>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-12">
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border table-striped">
+          <thead class="custom-table-head">
+          <tr>
+            <th style="min-width: 70px;">SL NO</th>
+            <th style="min-width: 100px;">NAME</th>
+            <th style="min-width: 100px;">EMAIL</th>
+            <th style="min-width: 100px;">USERNAME</th>
+            <th style="min-width: 100px;">ROLE LEVEL</th>
+            <th style="min-width: 150px;">NO OF TASKS</th>
+            <th style="min-width: 100px;">ACTIONS</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.userName }}</td>
+            <td>{{ user.roleLevel }}</td>
+            <td>{{ user.noOfTasks }}</td>
+            <td>
+              <i class="fa fa-edit" style="cursor: pointer" (click)="onRoute(true)"></i> |
+              <i class="fa fa-trash" style="cursor: pointer"></i>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

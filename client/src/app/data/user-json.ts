@@ -1,6 +1,6 @@
-import { TableData } from './TableData';
+import {User} from '../interface/user';
 
-export const dataJson: TableData[] = [
+export const userJson: User[] = [
   {
     id: 1,
     name: 'Mohamed Riyas',
