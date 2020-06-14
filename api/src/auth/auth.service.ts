@@ -6,7 +6,7 @@ import {CreateUserDto} from '../user/create-user.dto';
 import {LoginUserDto} from '../user/login-user.dto';
 import {JwtPayload} from './jwt-stratergy.service';
 import {Observable, of} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 
 @Injectable()
 export class AuthService {
@@ -38,11 +38,9 @@ export class AuthService {
     return this.userService.findByLogin(loginUserDto).pipe(
       map(user => {
         const token = this._createToken(user);
-        console.log(token);
-        const what =  {
+        return {
           username: user.username, userId: user.id, ...token,
         };
-        return what;
       })
     );
   }

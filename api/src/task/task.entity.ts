@@ -63,14 +63,14 @@ export class TaskEntity {
   comments: string
 
   @Column({
-    name: 'user_id',
+    name: 'userid',
     nullable: false,
     unique: false
   })
   @IsOptional({
     groups: ['update']
   })
-  @OneToOne(type => UserEntity, user => user.id)
+  @OneToOne(() => UserEntity, user => user.id)
   @IsString() @IsNotEmpty()
   userId: string
 

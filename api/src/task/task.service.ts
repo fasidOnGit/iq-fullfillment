@@ -3,7 +3,7 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {TaskEntity} from './task.entity';
 import {FindOneOptions, Repository} from 'typeorm';
 import {from, iif, Observable, of, throwError} from 'rxjs';
-import {mergeMap, switchMap} from 'rxjs/operators';
+import {mergeMap} from 'rxjs/operators';
 import {taskNotFound, userNotFound} from '../user/user-error-message.utils';
 import {isNotEmpty} from 'class-validator';
 
@@ -13,8 +13,10 @@ export class TaskService {
       @InjectRepository(TaskEntity) private readonly task: Repository<TaskEntity>
     ) {}
 
-    findAll(): Observable<TaskEntity[]> {
-      return from(this.task.find());
+    findAll(userId?: string): Observable<TaskEntity[]> {
+      return from(this.task.find(
+        userId ? {where: {userId}} : undefined
+      ));
     }
 
     findOne(options?: FindOneOptions): Observable<TaskEntity> {
@@ -90,5 +92,13 @@ export class TaskService {
         )
       )
     )
+  }
+
+  count(userId: string): Observable<number> {
+      return from(
+        this.task.count({
+          where: {userId}
+        })
+      )
   }
 }
