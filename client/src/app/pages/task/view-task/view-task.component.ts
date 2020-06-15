@@ -27,11 +27,11 @@ export class ViewTaskComponent implements OnInit {
   onRoute(modify: boolean) {
     this.isModify = modify;
     if(this.isModify == true) {
-      this.router.navigate(['/pages/task/edit']).then(r => {
+      this.router.navigate(['/task/edit']).then(r => {
         console.log('Navigatd to Route Edit', r);
       });
     } else  {
-      this.router.navigate(['/pages/task/add']).then(r => {
+      this.router.navigate(['/task/add']).then(r => {
         console.log('Navigatd to Route Add', r);
       });
     }

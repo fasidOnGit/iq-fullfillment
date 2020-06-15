@@ -4,12 +4,22 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { RouterModule } from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModule, NgbToastModule} from '@ng-bootstrap/ng-bootstrap';
 import {DataTablesModule} from 'angular-datatables';
 import {NgSelectModule} from "@ng-select/ng-select";
 import {NgOptionHighlightModule} from "@ng-select/ng-option-highlight";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {DataService} from "../service/data.service";
+import {JwtInterceptorService} from "../service/interceptor/jwt-interceptor.service";
+import {ErrorInterceptorService} from "../service/interceptor/error-interceptor.service";
+import {UserService} from "../service/user.service";
+
+const apiInterceptorFactory = () => {
+  return new JwtInterceptorService();
+};
+
+const httpModules = [ HttpClientModule ];
+
 
 @NgModule({
   declarations: [ HeaderComponent, FooterComponent ],
@@ -22,7 +32,8 @@ import {DataService} from "../service/data.service";
     NgOptionHighlightModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgbModule
+    NgbModule,
+    ...httpModules,
   ],
   exports: [
     HeaderComponent,
@@ -33,10 +44,16 @@ import {DataService} from "../service/data.service";
     NgOptionHighlightModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgbToastModule,
     NgbModule
   ],
   providers: [
-    DataService
+    {provide: HTTP_INTERCEPTORS, useFactory: apiInterceptorFactory, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptorService, multi: true},
+    DataService, UserService
   ]
 })
-export class SharedModule { }
+export class SharedModule {
+  constructor() {
+  }
+}

@@ -24,6 +24,26 @@
         </div>
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
           <div class="form-group">
+            <label [for]="assignUserLabel">Assign To</label>
+            <ng-select
+              [items]="people"
+              [multiple]="false"
+              bindLabel="name"
+              [labelForId] ="assignUserLabel"
+              [selectableGroup]="true"
+              [closeOnSelect]="false"
+              bindValue="id"
+              [(ngModel)]="selectedPeople">
+              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.name}}
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
             <label for="comments">Comments</label>
             <input type="text" class="form-control" id="comments" placeholder="Comments">
           </div>

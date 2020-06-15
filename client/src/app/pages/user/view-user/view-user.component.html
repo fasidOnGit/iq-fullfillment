@@ -12,10 +12,9 @@
     </div>
     <div class="row mt-2">
       <div class="col-12">
-        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border table-striped">
+        <table datatable class="row-border hover">
           <thead class="custom-table-head">
           <tr>
-            <th style="min-width: 70px;">SL NO</th>
             <th style="min-width: 100px;">NAME</th>
             <th style="min-width: 100px;">EMAIL</th>
             <th style="min-width: 100px;">USERNAME</th>
@@ -26,15 +25,15 @@
           </thead>
           <tbody>
           <tr *ngFor="let user of users">
-            <td>{{ user.id }}</td>
             <td>{{ user.name }}</td>
             <td>{{ user.email }}</td>
-            <td>{{ user.userName }}</td>
-            <td>{{ user.roleLevel }}</td>
-            <td>{{ user.noOfTasks }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.roleLevel ? user.roleLevel : 'Admin'  }}</td>
+            <td>{{ user.noOfTasks ? user.noOfTasks: 0 }}</td>
             <td>
               <i class="fa fa-edit" style="cursor: pointer" (click)="onRoute(true)"></i> |
-              <i class="fa fa-trash" style="cursor: pointer"></i>
+              <i class="fa fa-trash" style="cursor: pointer"></i> |
+              <i class="fa fa-eye" style="cursor: pointer" (click)="getUserTasks()"></i>
             </td>
           </tr>
           </tbody>

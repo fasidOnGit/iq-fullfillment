@@ -2,7 +2,7 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  userName: string;
+  username: string;
   roleLevel: string;
   noOfTasks: number;
 }
