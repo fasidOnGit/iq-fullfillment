@@ -4,6 +4,7 @@ import {NgbModal, NgbToast} from "@ng-bootstrap/ng-bootstrap";
 import {UserService} from "../../../service/user.service";
 import {map} from "rxjs/operators";
 import {User} from "../../../interface/user";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-view-user',
@@ -14,7 +15,7 @@ export class ViewUserComponent implements OnInit {
 
   title = 'USER DETAILS';
   dtOptions: DataTables.Settings = {};
-  dtTrigger: any;
+  dtTrigger: Subject<any> = new Subject();
   users : User [];
   isModify: boolean;
 
@@ -49,6 +50,7 @@ export class ViewUserComponent implements OnInit {
       return data;
     })).subscribe((users) => {
         this.users = users;
+        this.dtTrigger.next();
         console.log('Get All Users', users);
     });
   }
